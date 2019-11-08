@@ -21,13 +21,16 @@ def MakeCustomerGW(client):
 
     # Get BGP ASN, and make sure it's valid.
     asNumber = 0
-    while asNumber == 0 or asNumber > 65534:
+    while True:
         try:
             asNumber = int(input("Enter your 16-bit BGP ASN (If you do not have your own ASN, use a private one [64512-65534]): "))
-            if asNumber == 0 or asNumber > 65534:
+            if asNumber <= 0 or asNumber > 65534:
                 print("ASN input was out of range, please input a number between 1 and 65534 (inclusive).")
+                continue
         except:
             print("You didn't enter a number; please input a number between 1 and 65534 (inclusive).")
+            continue
+        break
 
     # Get a valid IP address
     while True:
@@ -40,14 +43,12 @@ def MakeCustomerGW(client):
             continue
         break
 
-    pause = input("pause")
-
     # Create the Customer GW
     response = client.create_customer_gateway(
         BgpAsn =asNumber,
         PublicIp = publicIP,
         Type = 'ipsec.1',
-        DryRun = True
+        DryRun = False
     )
     # Tag the Customer GW
     responseDict = json.loads(json.dumps(response))
@@ -63,8 +64,8 @@ def MakeVPNGateway(client):
 
     # Create VPN Gateway
     response = client.create_vpn_gateway(
-        Type='ipsec.1',
-        DryRun=False
+        Type = 'ipsec.1',
+        DryRun = False
     )
 
     # Tag the VPN GW
@@ -103,13 +104,23 @@ def MakeVPNGateway(client):
         table1.add_row([index, vpcsDict[index]['VPCName'], vpcsDict[index]['VPCID'], vpcsDict[index]['VPCCIDR']])
     print(table1)
 
-    vpcSelection = int(input("Select an index number for the VPC to attach to the VPN Gateway: "))
+    # Make sure a valid selection is made from the table
+    while True:
+        try:
+            vpcSelection = int(input("Select an index number for the VPC to attach to the VPN Gateway: "))
+            if vpcSelection > (len(vpcsDict) - 1) or vpcSelection < 0:
+                print("This isn't a valid choice; please try again.")
+                continue
+        except:
+            print("This isn't a valid choice; please try again.")
+            continue
+        break
 
     # And then attach the VPG to the VPC
     client.attach_vpn_gateway(
-        VpcId=vpcsDict[vpcSelection]['VPCID'],
-        VpnGatewayId=vpnGWID,
-        DryRun=False
+        VpcId = vpcsDict[vpcSelection]['VPCID'],
+        VpnGatewayId = vpnGWID,
+        DryRun = False
     )
 
     print("Pausing for 20 seconds while the Virtual Private Gateway is attached to the VPC...")
@@ -187,6 +198,18 @@ def MakeConfigFiles(vpnID):
     print(table2)
 
     converter_id = int(input("Enter an index number for the config you wish to download: "))
+
+    # Make sure a valid selection is made from the table
+    while True:
+        try:
+            converter_id = int(input("Enter an index number for the config you wish to download: "))
+            if converter_id > (len(converter_id) - 1) or converter_id < 0:
+                print("This isn't a valid choice; please try again.")
+                continue
+        except:
+            print("This isn't a valid choice; please try again.")
+            continue
+        break
 
     client = boto3.client('ec2')  # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html
 
