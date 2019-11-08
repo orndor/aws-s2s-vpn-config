@@ -34,24 +34,34 @@ Follow the prompts, as show below in the example output.
 ## Example Application Walk-Through & Output
 
 ```bash
+---===AWS Site-to-Site VPN Configurator===---
+
+
+Step 1.  Create the Customer Gateway.
+
 Enter a name for the Customer Gateway (no spaces): TestCGW
-
 Enter your BGP ASN: 65000
+Enter your public IP address: 4.3.2.1
 
-Enter your public IP address: 1.2.3.4
+Step 2.  Create the VPN Gateway and Attach it to a VPC.
 
-Enter a name for the Vitual Private Gateway (no spaces): TestVPGW
-+-------+----------+-----------------------+---------------+
-| Index | VPC Name |         VPC ID        |    VPC CIDR   |
-+-------+----------+-----------------------+---------------+
-|   0   | default  |      vpc-f269ce88     | 172.31.0.0/16 |
-|   1   | New-Test | vpc-046053cdad541808c | 172.99.0.0/24 |
-+-------+----------+-----------------------+---------------+
-Select an index number: 1
-
+Enter a name for the Vitual Private Gateway (no spaces): TestVPG
++-------+----------+--------------+---------------+
+| Index | VPC Name |    VPC ID    |    VPC CIDR   |
++-------+----------+--------------+---------------+
+|   0   | default  | vpc-f269cf99 | 172.31.0.0/16 |
++-------+----------+--------------+---------------+
+Select an index number for the VPC to attach to the VPN Gateway: 0
 Pausing for 20 seconds while the Virtual Private Gateway is attached to the VPC...
 
+Step 3.  Create the VPN.
+
 Enter a name for the VPN connection (no spaces): TestVPN
+
+Step 4.  Enable Route Table Propagation...Complete.
+
+
+Step 5. Create On-Prem Device Configuration Files.
 
 +-------+------------------------+----------------------------+------------------------+--------------------------------------------+
 | index |         Vendor         |          Platform          |        Software        |                  Filename                  |
@@ -76,5 +86,7 @@ Enter a name for the VPN connection (no spaces): TestVPN
 |   17  |          IIJ           |          SEIL/x86          |     SEIL/x86 2.30+     |       customer-gateway-iij-seil.xslt       |
 +-------+------------------------+----------------------------+------------------------+--------------------------------------------+
 Enter an index number for the config you wish to download: 0
+Files created and placed in the current directory: customer-gateway-cisco-ios-isr.xslt, vpn-00ae4f687bb231d7c.xml and vpn-00ae4f687bb231d7c.txt
 
-Files created and placed in the current directory: customer-gateway-cisco-ios-isr.xslt, vpn-0373a5f2847fa1084.xml and vpn-0373a5f2847fa1084.txt
+All done.  Enjoy your new VPN!
+```

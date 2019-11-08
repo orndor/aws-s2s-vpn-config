@@ -50,7 +50,7 @@ def MakeVPNGateway(client):
     vpnGWID = responseDict['VpnGateway']['VpnGatewayId']
     client.create_tags(Resources=[vpnGWID], Tags=[{'Key': 'Name', 'Value': vpgName}])
 
-    # And figure out which VPC to attach it to..
+    # And figure out which VPC to attach it to
     ec2 = boto3.resource('ec2')
     vpcs = list(ec2.vpcs.all())
     counter = 0
@@ -81,7 +81,7 @@ def MakeVPNGateway(client):
         table1.add_row([index, vpcsDict[index]['VPCName'], vpcsDict[index]['VPCID'], vpcsDict[index]['VPCCIDR']])
     print(table1)
 
-    vpcSelection = int(input("Select an index number: "))
+    vpcSelection = int(input("Select an index number for the VPC to attach to the VPN Gateway: "))
 
     # And then attach the VPG to the VPC
     client.attach_vpn_gateway(
@@ -164,8 +164,7 @@ def MakeConfigFiles(vpnID):
         table2.add_row([index, item['Vendor'], item['Platform'], item['Software'], item['Filename']])
     print(table2)
 
-    converter_id = int(input("Enter an index number for the config you wish to download: "))  # 10
-    # vpnID = 'vpn-0758529578585e17e'
+    converter_id = int(input("Enter an index number for the config you wish to download: "))
 
     client = boto3.client('ec2')  # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html
 
@@ -199,9 +198,15 @@ def MakeConfigFiles(vpnID):
 
 
 client = boto3.client('ec2')
-
+print("\n---===AWS Site-to-Site VPN Configurator===---\n")
+print("\nStep 1.  Create the Customer Gateway.\n")
 customerGWID = MakeCustomerGW(client)
+print("\nStep 2.  Create the VPN Gateway and Attach it to a VPC.\n")
 vpnGWID, vpcID = MakeVPNGateway(client)
+print("\nStep 3.  Create the VPN.\n")
 vpnID = MakeVPN(client, customerGWID, vpnGWID)
+print("\nStep 4.  Enable Route Table Propagation...Complete.\n")
 EnableRouteTableProp(vpnGWID, vpcID)
+print("\nStep 5. Create On-Prem Device Configuration Files.\n")
 MakeConfigFiles(vpnID)
+print("\nAll done.  Enjoy your new VPN!\n")
