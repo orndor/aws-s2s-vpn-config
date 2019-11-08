@@ -2,7 +2,7 @@
 
 This script will perform the following:
 
-1. Create all the components required in AWS for a Site-to-Site VPN with default settings (default meaning AWS generated pre-shared keys, inside IPs, DH algorithms, AWS-side private BGP AS, etc.).  These components are:
+1. Create all the components required in AWS for a Site-to-Site VPN with default settings (default meaning AWS generated pre-shared keys, inside IPs, DH algorithms, AWS-side private BGP AS, etc.), in your default region (as per your AWS CLI config).  These components are:
   
   * Customer Gateway
   * Virtual Private Gateway
