@@ -4,6 +4,7 @@ import time
 import datetime
 import os.path
 import urllib
+import ipaddress
 from prettytable import PrettyTable
 
 
@@ -16,16 +17,37 @@ def convert_timestamp(item_date_object):
 
 def MakeCustomerGW(client):
     # Gather Customer GW Info:
-    cgwName = input("Enter a name for the Customer Gateway (no spaces): ")
-    asNumber = int(input("Enter your BGP ASN: "))
-    publicIP = input("Enter your public IP address: ")
+    cgwName = input("Enter a name for the Customer Gateway: ")
+
+    # Get BGP ASN, and make sure it's valid.
+    asNumber = 0
+    while asNumber == 0 or asNumber > 65534:
+        try:
+            asNumber = int(input("Enter your 16-bit BGP ASN (If you do not have your own ASN, use a private one [64512-65534]): "))
+            if asNumber == 0 or asNumber > 65534:
+                print("ASN input was out of range, please input a number between 1 and 65534 (inclusive).")
+        except:
+            print("You didn't enter a number; please input a number between 1 and 65534 (inclusive).")
+
+    # Get a valid IP address
+    while True:
+        try:
+            publicIP = input("Enter your public IP address: ")
+            #test for a valid IP:
+            ipaddress.ip_address(publicIP)
+        except:
+            print("That isn't a valid IPv4 address.  Please try again.")
+            continue
+        break
+
+    pause = input("pause")
 
     # Create the Customer GW
     response = client.create_customer_gateway(
-        BgpAsn=asNumber,
-        PublicIp=publicIP,
-        Type='ipsec.1',
-        DryRun=False
+        BgpAsn =asNumber,
+        PublicIp = publicIP,
+        Type = 'ipsec.1',
+        DryRun = True
     )
     # Tag the Customer GW
     responseDict = json.loads(json.dumps(response))
@@ -37,7 +59,7 @@ def MakeCustomerGW(client):
 
 def MakeVPNGateway(client):
     # Gather Customer GW Info:
-    vpgName = input("Enter a name for the Vitual Private Gateway (no spaces): ")
+    vpgName = input("Enter a name for the Vitual Private Gateway: ")
 
     # Create VPN Gateway
     response = client.create_vpn_gateway(

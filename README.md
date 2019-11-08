@@ -39,13 +39,13 @@ Follow the prompts, as show below in the example output.
 
 Step 1.  Create the Customer Gateway.
 
-Enter a name for the Customer Gateway (no spaces): TestCGW
-Enter your BGP ASN: 65000
+Enter a name for the Customer Gateway: TestCGW
+Enter your BGP ASN (If you do not have your own ASN, use a private one [64512-65534]): 65000
 Enter your public IP address: 4.3.2.1
 
 Step 2.  Create the VPN Gateway and Attach it to a VPC.
 
-Enter a name for the Vitual Private Gateway (no spaces): TestVPG
+Enter a name for the Vitual Private Gateway: TestVPG
 +-------+----------+--------------+---------------+
 | Index | VPC Name |    VPC ID    |    VPC CIDR   |
 +-------+----------+--------------+---------------+
