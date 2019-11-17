@@ -197,13 +197,11 @@ def MakeConfigFiles(vpnID):
         table2.add_row([index, item['Vendor'], item['Platform'], item['Software'], item['Filename']])
     print(table2)
 
-    converter_id = int(input("Enter an index number for the config you wish to download: "))
-
     # Make sure a valid selection is made from the table
     while True:
         try:
             converter_id = int(input("Enter an index number for the config you wish to download: "))
-            if converter_id > (len(converter_id) - 1) or converter_id < 0:
+            if converter_id > (len(cf) - 1) or converter_id < 0:
                 print("This isn't a valid choice; please try again.")
                 continue
         except:

@@ -18,9 +18,9 @@ $ git clone https://github.com/orndor/aws-s2s-vpn-config.git
 
 $ cd aws-s2s-vpn-config
 
-$ python setup.py build
+$ python3 setup.py build
 
-$ python setup.py install
+$ python3 setup.py install
 ```
 
 ## To Use
