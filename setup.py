@@ -10,7 +10,8 @@ setup(
         'datetime',
         'lxml',
         'xmltodict',
-        'prettytable'
+        'prettytable',
+        'ipaddress'
     ],
     license='Apache',
     author='Rob Orndoff',
